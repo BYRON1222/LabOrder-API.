@@ -4,14 +4,18 @@
 
 El servicio expone una API REST con Express. Para mantener el MVP operativo sin dependencias externas, las órdenes se guardan en memoria (array local).
 
-## Diagrama (Mermaid)
 
 ```mermaid
-graph TD
-    A[Cliente/Navegador] -->|Petición HTTP| B[API Express]
-    B -->|Consulta/Escribe| C["Repositorio (Array en memoria)"]
-    C -->|Retorna Datos| B
-    B -->|Respuesta JSON| A
+flowchart LR
+    Cliente["Cliente o Postman"]
+    API["Express API"]
+    Memoria["Array orders en memoria"]
+
+    Cliente -->|HTTP| API
+    API -->|leer y escribir| Memoria
+    Memoria -->|orden actual| API
+    API -->|JSON| Cliente
+```
 
 ## Componentes
 
