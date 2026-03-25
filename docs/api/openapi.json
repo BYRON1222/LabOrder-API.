@@ -1,0 +1,182 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "LabOrder-API (MVP)",
+    "version": "1.0.0",
+    "description": "API REST MVP para un Sistema de Órdenes de Laboratorio. Almacenamiento en memoria (array local)."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/orders": {
+      "get": {
+        "summary": "Listar todas las órdenes",
+        "responses": {
+          "200": {
+            "description": "Listado de órdenes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Order" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Crear una orden",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateOrderRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Orden creada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Order" }
+              }
+            }
+          },
+          "400": {
+            "description": "Datos inválidos (campos vacíos o cantidad no válida)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders/{id}": {
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "description": "Id de la orden (entero > 0)"
+        }
+      ],
+      "get": {
+        "summary": "Obtener una orden específica",
+        "responses": {
+          "200": {
+            "description": "Orden encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Order" }
+              }
+            }
+          },
+          "400": {
+            "description": "Id inválido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Orden no encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Cambiar estado de una orden a 'Completado'",
+        "responses": {
+          "200": {
+            "description": "Estado actualizado",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Order" }
+              }
+            }
+          },
+          "400": {
+            "description": "Id inválido",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Orden no encontrada",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CreateOrderRequest": {
+        "type": "object",
+        "required": ["cliente", "prueba", "cantidad"],
+        "properties": {
+          "cliente": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Cliente de la orden (no vacío)"
+          },
+          "prueba": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Tipo de prueba (no vacío)"
+          },
+          "cantidad": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Cantidad (entero > 0)"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Order": {
+        "type": "object",
+        "required": ["Id", "Cliente", "Prueba", "Cantidad", "Estado"],
+        "properties": {
+          "Id": { "type": "integer", "minimum": 1 },
+          "Cliente": { "type": "string" },
+          "Prueba": { "type": "string" },
+          "Cantidad": { "type": "integer", "minimum": 1 },
+          "Estado": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": { "type": "string" },
+          "details": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
+
