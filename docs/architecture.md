@@ -7,13 +7,11 @@ El servicio expone una API REST con Express. Para mantener el MVP operativo sin 
 ## Diagrama (Mermaid)
 
 ```mermaid
-flowchart TB
-  Client[Cliente / Frontend / Postman] -->|HTTP| API[Express API]
-  API --> OrdersRepo[Orders Repository (Array en memoria)]
-  OrdersRepo --> OrdersStore[(orders: [] / nextId)]
-
-  API -->|respuestas JSON| Client
-```
+graph TD
+    A[Cliente/Navegador] -->|Petición HTTP| B[API Express]
+    B -->|Consulta/Escribe| C["Repositorio (Array en memoria)"]
+    C -->|Retorna Datos| B
+    B -->|Respuesta JSON| A
 
 ## Componentes
 
